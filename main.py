@@ -60,7 +60,7 @@ if presentationType == "pp" or presentationType == "gs":
                             keyboard.press_and_release("ctrl+f5")
                         elif not presentationMode:
                             keyboard.press_and_release("esc")
-            elif detector.fingersUp(hands[0]) == [0, 1, 0, 0, 0] or (len(hands) == 2 and detector.fingersUp(hands[1]) == [0, 1, 0, 0, 0]):
+            elif (detector.fingersUp(hands[0]) == [0, 1, 0, 0, 0] or (len(hands) == 2 and detector.fingersUp(hands[1]) == [0, 1, 0, 0, 0])) or (detector.fingersUp(hands[0]) == [1, 1, 0, 0, 0] or (len(hands) == 2 and detector.fingersUp(hands[1]) == [1, 1, 0, 0, 0])):
                 if not action:
                     print("next slide")
                     action = True
@@ -69,7 +69,7 @@ if presentationType == "pp" or presentationType == "gs":
                             presentation.SlideShowWindow.View.Next()
                     elif presentationType == "gs":
                         keyboard.press_and_release("right")
-            elif detector.fingersUp(hands[0]) == [0, 0, 1, 0, 0] or (len(hands) == 2 and detector.fingersUp(hands[1]) == [0, 0, 1, 0, 0]):
+            elif (detector.fingersUp(hands[0]) == [0, 0, 1, 0, 0] or (len(hands) == 2 and detector.fingersUp(hands[1]) == [0, 0, 1, 0, 0])) or (detector.fingersUp(hands[0]) == [1, 0, 1, 0, 0] or (len(hands) == 2 and detector.fingersUp(hands[1]) == [1, 0, 1, 0, 0])):
                 if not action:
                     print("previous slide")
                     action = True
@@ -78,7 +78,7 @@ if presentationType == "pp" or presentationType == "gs":
                             presentation.SlideShowWindow.View.Previous()
                     elif presentationType == "gs":
                         keyboard.press_and_release("left")
-            elif detector.fingersUp(hands[0]) == [0, 0, 0, 0, 1] or (len(hands) == 2 and detector.fingersUp(hands[1]) == [0, 0, 0, 0, 1]):
+            elif (detector.fingersUp(hands[0]) == [0, 0, 0, 0, 1] or (len(hands) == 2 and detector.fingersUp(hands[1]) == [0, 0, 0, 0, 1])) or (detector.fingersUp(hands[0]) == [1, 0, 0, 0, 1] or (len(hands) == 2 and detector.fingersUp(hands[1]) == [1, 0, 0, 0, 1])):
                 if not action:
                     action = True
                     if presentationType == "pp":
@@ -94,29 +94,4 @@ else:
     print("Invalid input... closing")
     time.sleep(2)
     exit("Invalid input on type selection")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
