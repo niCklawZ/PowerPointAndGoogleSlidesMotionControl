@@ -44,7 +44,9 @@ if presentationType == "pp" or presentationType == "gs":
     while True:
         success, img = cap.read()
         hands, img = detector.findHands(img)
-        cv2.imshow("Image", img)
+        cv2.namedWindow("image", cv2.WINDOW_NORMAL)
+        cv2.resizeWindow("image", 1280, 720)
+        cv2.imshow("image", img)
         cv2.waitKey(1)
 
         if len(hands) == 1 or len(hands) == 2:
