@@ -7,6 +7,8 @@ import tkinter as tk
 import webbrowser
 import keyboard
 
+cam_id = int(input("Enter camera id (0..n): "))
+
 presentationType = input("Type in 'pp' for PowerPoint or 'gs' for Google Slides: ")
 presentationType = presentationType.lower()
 
@@ -14,6 +16,7 @@ if presentationType == "pp" or presentationType == "gs":
     if presentationType == "pp":
         root = tk.Tk()
         root.withdraw()
+        root.attributes("-topmost", True)
 
         file_path = tkinter.filedialog.askopenfilename(filetypes=[("PowerPoint files", ".pptx")]).replace("/", "\\")
         print(file_path)
@@ -29,7 +32,7 @@ if presentationType == "pp" or presentationType == "gs":
         webbrowser.open(url, new=1, autoraise=True)
         print("\nDisclaimer: For the Motion Controller to work with Google Slides in your webbrowser the browser has to be focussed!")
 
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(cam_id)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
@@ -60,7 +63,7 @@ if presentationType == "pp" or presentationType == "gs":
                             keyboard.press_and_release("ctrl+f5")
                         elif not presentationMode:
                             keyboard.press_and_release("esc")
-            elif (detector.fingersUp(hands[0]) == [0, 1, 0, 0, 0] or (len(hands) == 2 and detector.fingersUp(hands[1]) == [0, 1, 0, 0, 0])) or (detector.fingersUp(hands[0]) == [1, 1, 0, 0, 0] or (len(hands) == 2 and detector.fingersUp(hands[1]) == [1, 1, 0, 0, 0])):
+            elif detector.fingersUp(hands[0]) == [0, 1, 0, 0, 0] or (len(hands) == 2 and detector.fingersUp(hands[1]) == [0, 1, 0, 0, 0]):
                 if not action:
                     print("next slide")
                     action = True
@@ -69,7 +72,7 @@ if presentationType == "pp" or presentationType == "gs":
                             presentation.SlideShowWindow.View.Next()
                     elif presentationType == "gs":
                         keyboard.press_and_release("right")
-            elif (detector.fingersUp(hands[0]) == [0, 0, 1, 0, 0] or (len(hands) == 2 and detector.fingersUp(hands[1]) == [0, 0, 1, 0, 0])) or (detector.fingersUp(hands[0]) == [1, 0, 1, 0, 0] or (len(hands) == 2 and detector.fingersUp(hands[1]) == [1, 0, 1, 0, 0])):
+            elif detector.fingersUp(hands[0]) == [0, 0, 1, 0, 0] or (len(hands) == 2 and detector.fingersUp(hands[1]) == [0, 0, 1, 0, 0]):
                 if not action:
                     print("previous slide")
                     action = True
@@ -78,14 +81,15 @@ if presentationType == "pp" or presentationType == "gs":
                             presentation.SlideShowWindow.View.Previous()
                     elif presentationType == "gs":
                         keyboard.press_and_release("left")
-            elif (detector.fingersUp(hands[0]) == [0, 0, 0, 0, 1] or (len(hands) == 2 and detector.fingersUp(hands[1]) == [0, 0, 0, 0, 1])) or (detector.fingersUp(hands[0]) == [1, 0, 0, 0, 1] or (len(hands) == 2 and detector.fingersUp(hands[1]) == [1, 0, 0, 0, 1])):
+            elif detector.fingersUp(hands[0]) == [0, 0, 0, 0, 1] or (len(hands) == 2 and detector.fingersUp(hands[1]) == [0, 0, 0, 0, 1]):
                 if not action:
                     action = True
                     if presentationType == "pp":
                         app.Quit()
                     elif presentationType == "gs":
                         keyboard.press_and_release("ctrl+w")
-                    exit("Prgram closed via gesture.")
+                    cv2.destroyAllWindows()
+                    exit("Program closed via gesture.")
             else:
                 action = False
         else:
@@ -94,4 +98,4 @@ else:
     print("Invalid input... closing")
     time.sleep(2)
     exit("Invalid input on type selection")
-    
+
