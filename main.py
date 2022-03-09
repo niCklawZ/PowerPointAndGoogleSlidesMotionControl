@@ -7,6 +7,15 @@ import tkinter as tk
 import webbrowser
 import keyboard
 
+#--------------  Handgesten ------------------------------
+toggle_presentationmode_gesture = [1, 1, 1, 1, 1]
+next_gesture = [1, 1, 0, 0, 0]
+previous_gesture = [0, 1, 1, 0, 0]
+close_presentation_gesture = [0, 0, 0, 0, 1]
+
+use_toggle_presentationmode = True
+use_close_presentation = False
+
 cam_id = int(input("Enter camera id (0..n): "))
 
 presentationType = input("Type in 'pp' for PowerPoint or 'gs' for Google Slides: ")
@@ -50,7 +59,7 @@ if presentationType == "pp" or presentationType == "gs":
         cv2.waitKey(1)
 
         if len(hands) == 1 or len(hands) == 2:
-            if detector.fingersUp(hands[0]) == [1, 1, 1, 1, 1] or (len(hands) == 2 and detector.fingersUp(hands[1]) == [1, 1, 1, 1, 1]):
+            if use_toggle_presentationmode and (detector.fingersUp(hands[0]) == toggle_presentationmode_gesture or (len(hands) == 2 and detector.fingersUp(hands[1]) == toggle_presentationmode_gesture)):
                 if not action:
                     print("start/stop presentation mode")
                     presentationMode = not presentationMode
@@ -65,7 +74,7 @@ if presentationType == "pp" or presentationType == "gs":
                             keyboard.press_and_release("ctrl+f5")
                         elif not presentationMode:
                             keyboard.press_and_release("esc")
-            elif detector.fingersUp(hands[0]) == [0, 1, 0, 0, 0] or (len(hands) == 2 and detector.fingersUp(hands[1]) == [0, 1, 0, 0, 0]):
+            elif detector.fingersUp(hands[0]) == next_gesture or (len(hands) == 2 and detector.fingersUp(hands[1]) == next_gesture):
                 if not action:
                     print("next slide")
                     action = True
@@ -74,7 +83,7 @@ if presentationType == "pp" or presentationType == "gs":
                             presentation.SlideShowWindow.View.Next()
                     elif presentationType == "gs":
                         keyboard.press_and_release("right")
-            elif detector.fingersUp(hands[0]) == [0, 0, 1, 0, 0] or (len(hands) == 2 and detector.fingersUp(hands[1]) == [0, 0, 1, 0, 0]):
+            elif detector.fingersUp(hands[0]) == previous_gesture or (len(hands) == 2 and detector.fingersUp(hands[1]) == previous_gesture):
                 if not action:
                     print("previous slide")
                     action = True
@@ -83,7 +92,7 @@ if presentationType == "pp" or presentationType == "gs":
                             presentation.SlideShowWindow.View.Previous()
                     elif presentationType == "gs":
                         keyboard.press_and_release("left")
-            elif detector.fingersUp(hands[0]) == [0, 0, 0, 0, 1] or (len(hands) == 2 and detector.fingersUp(hands[1]) == [0, 0, 0, 0, 1]):
+            elif use_close_presentation and (detector.fingersUp(hands[0]) == close_presentation_gesture or (len(hands) == 2 and detector.fingersUp(hands[1]) == close_presentation_gesture)):
                 if not action:
                     action = True
                     if presentationType == "pp":
